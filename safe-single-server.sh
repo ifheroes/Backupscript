@@ -1,15 +1,8 @@
 #!/bin/bash
+#0 0 */3 * * /Backend/safe.sh >/dev/null 2>&1
 
 #Variablen
 date=`date +%Y_%b_%d_%H-%M`
-
-#Server 1
-server1=''
-server_ip1=''
-
-#Server 2
-server2=''
-server_ip2=''
 
 cd /Backend/
 
@@ -24,15 +17,14 @@ else
 fi
 
 ##COPY CONTENT TO TEMP FILE
-sshpass -p "$server1" scp -r root@$server_ip1:/home/bauserver-neu-15_5_2021/ /Backend/sicherung
-sshpass -p "$server1" scp -r root@$server_ip1:/var/www/ /Backend/sicherung
-sshpass -p "$server2" scp -r root@$server_ip2:/IFH/mcserver_test/ /Backend/sicherung
+cp -r /home/minecraft/ /Backend/sicherung
+cp -r /var/www/ /Backend/sicherung
 
 
 tar -cf $date.tar sicherung
 
 ##GOOGLE DRIVE UPLOAD
-cd /usr/sbin && ./gdrive upload /Backend/$date.tar
+cd /root && ./gdrive upload /Backend/$date.tar
 
 ##REMOVE BACKUP TAR file
 rm -r /Backend/$date.tar
